@@ -2,14 +2,16 @@ package uas_mobdev_felix_17090121.com;
 
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
@@ -24,7 +26,6 @@ import com.karumi.dexter.listener.single.PermissionListener;
 
 
 public class MainActivity extends AppCompatActivity {
-
     private ImageView ivBgContent;
     private CodeScanner mCodeScanner;
     private CodeScannerView scannerView;
@@ -46,40 +47,37 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        String message = "result : \n" + result.getText();
+                        String message = "result: \n" + result.getText();
                         showAlertDialog(message);
                     }
                 });
             }
         });
         checkCameraPermission();
-
     }
+
     private void checkCameraPermission(){
-        Dexter.withActivity(this)
-                .withPermission(Manifest.permission.CAMERA)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
-                        mCodeScanner.startPreview();
-                    }
+        Dexter.withActivity(this).withPermission(Manifest.permission.CAMERA).withListener(new PermissionListener() {
+            @Override
+            public void onPermissionGranted(PermissionGrantedResponse response) {
+                mCodeScanner.startPreview();
+            }
 
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
+            @Override
+            public void onPermissionDenied(PermissionDeniedResponse response) {
 
-                    }
+            }
 
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                })
-                .check();
+            @Override
+            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                token.continuePermissionRequest();
+            }
+        }).check();
     }
 
-    private void showAlertDialog(String messsage){
+    private void showAlertDialog(String message){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(messsage);
+        builder.setMessage(message);
         builder.setCancelable(true);
 
         builder.setPositiveButton(
@@ -92,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
-
         builder.setNegativeButton(
                 "CANCEL",
                 new DialogInterface.OnClickListener() {
@@ -102,7 +99,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
-        AlertDialog alertDialog =  builder.create();
+
+        AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 
@@ -117,5 +115,4 @@ public class MainActivity extends AppCompatActivity {
         mCodeScanner.releaseResources();
         super.onPause();
     }
-
 }
