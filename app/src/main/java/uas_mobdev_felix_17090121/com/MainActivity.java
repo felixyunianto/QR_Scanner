@@ -8,9 +8,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.budiyev.android.codescanner.CodeScanner;
@@ -35,10 +38,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ivBgContent = findViewById(R.id.ivBgContent);
-        scannerView = findViewById(R.id.scannerView);
+        getId();
 
+        checkCameraPermission();
+    }
+
+    public void getId(){
+        ivBgContent = findViewById(R.id.ivBgContent);
         ivBgContent.bringToFront();
+        scannerView = findViewById(R.id.scannerView);
 
         mCodeScanner = new CodeScanner(this, scannerView);
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
@@ -47,13 +55,12 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        String message = "result: \n" + result.getText();
+                        String message = "Hasil : \n" + result.getText();
                         showAlertDialog(message);
                     }
                 });
             }
         });
-        checkCameraPermission();
     }
 
     private void checkCameraPermission(){
@@ -76,9 +83,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showAlertDialog(String message){
+        TextView showText = new TextView(this);
+        showText.setText(message);
+        showText.setTextSize(18);
+        showText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        showText.setTextIsSelectable(true);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(message);
-        builder.setCancelable(true);
+        builder.setView(showText).setCancelable(true);
+
+//        builder.setMessage(message);
+//        builder.setCancelable(true);
 
         builder.setPositiveButton(
                 "SCAN LAGI",
@@ -91,11 +105,11 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
         builder.setNegativeButton(
-                "CANCEL",
+                "EXIT",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
+                        finish();
                     }
                 }
         );
