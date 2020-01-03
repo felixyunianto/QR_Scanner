@@ -91,9 +91,6 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(showText).setCancelable(true);
 
-//        builder.setMessage(message);
-//        builder.setCancelable(true);
-
         builder.setPositiveButton(
                 "SCAN LAGI",
                 new DialogInterface.OnClickListener() {
